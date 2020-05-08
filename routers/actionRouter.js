@@ -26,15 +26,20 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/:id', (req, res) => {
-	const { description, notes } = req.body;
-	const { project_id } = req.params.id;
+	const { description, notes, completed } = req.body;
+	const project_id = req.params.id;
+	console.log({ description, notes, project_id }, 'test');
 	db
-		.insert({ description, notes, project_id })
+		.insert({
+			project_id: req.params.id,
+			description: req.body.description,
+			notes: req.body.notes
+		})
 		.then((response) => {
 			res.status(201).json(response);
 		})
 		.catch((err) => {
-			res.status(500).json({ message: 'An Error has occurred with the server' });
+			res.status(500).json({ message: 'An Error has occurred with the server', error: err });
 		});
 });
 
